@@ -3,8 +3,7 @@ HOST = 'localhost'
 PORT = 12345
 BUFSIZ = 1024
 if __name__ == '__main__':
-    client_sock = socket.socket(socket.AF_INET,
-    socket.SOCK_STREAM)
+    client_sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     host = input("Enter hostname [%s]: " %HOST) or HOST
     port = input("Enter port [%s]: " %PORT) or PORT
     sock_addr = (host, int(port))
