@@ -6,26 +6,31 @@ const char* WIFI_PASS = "HT7KU2Xv";
 const char* SERVER_ADDRESS = "192.168.100.76";
 const int SERVER_PORT = 12345;
 
-void setup() {
-  Serial.begin(115200);
 
+IPAddress connectLocalWiFi(const char* ssid,const char* password)
+{
   Serial.print("Connecting to: ");
-  Serial.println(WIFI_SSID);
-  
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
   while ( WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print('.');
   }
+  return WiFi.localIP();
+}
 
-  Serial.print("Local IP Address: ");
-  Serial.println(WiFi.localIP());
+void setup() {
+  Serial.begin(115200);
+  IPAddress ipClient = connectLocalWiFi(WIFI_SSID,WIFI_PASS);
+  Serial.print("Client (MCU) IP Address: ");
+  Serial.println(ipClient);
 }
 
 void loop() {
-  Serial.print("Connecting to: ");
+  Serial.print("Connecting to address: ");
   Serial.println(SERVER_ADDRESS);
+  Serial.print("In port: ");
+  Serial.println(SERVER_PORT);
 
   WiFiClient client;
 
