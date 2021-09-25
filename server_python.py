@@ -1,9 +1,21 @@
 import socket
 from time import ctime
-HOST = 'localhost'
+
+#Get hostname and IP address of my computer
+
+def get_ip_host():
+    hostname = socket.gethostname()
+    ip_add_host = socket.gethostbyname(hostname)
+    return ip_add_host
+
+HOST = get_ip_host()
 PORT = 12345
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
+
+print('Server address: ',HOST)
+print('Server port: ',PORT)
+
 if __name__ == '__main__':
     server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     server_socket.bind(ADDR)
