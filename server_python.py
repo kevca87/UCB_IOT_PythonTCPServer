@@ -25,13 +25,19 @@ if __name__ == '__main__':
         print('Server waiting for connection...')
         client_sock, addr = server_socket.accept()
         print('Client connected from: ', addr)
-        #dMP = DistanceMeter(client_sock,addr,BUFSIZ)
+        dMP = DistanceMeter(client_sock,addr,BUFSIZ)
         while True:
-            #command = input()
-            #command_fun = dMP.get_command(command)
-            #command_return = command_fun()
-            #print(command_return)
-            data = client_sock.recv(BUFSIZ)
+            user_input = input('DMP>').split(' ')
+            command = user_input[0]
+            params = user_input[1:]
+            print('command',command)
+            print('params',params)
+            if command == 'close':
+                break
+            command_fun = dMP.get_command(command)
+            command_return = command_fun(params)
+            print(command_return)
+            '''data = client_sock.recv(BUFSIZ)
             if not data or data.decode('utf-8') == 'END':
                 break
             print("Received from client: %s" % data.decode('utf-8'))
@@ -39,7 +45,7 @@ if __name__ == '__main__':
             try:
                 client_sock.send(bytes(ctime(), 'utf-8'))
             except KeyboardInterrupt:
-                print("Exited by user")
-        print('closing client_sock')
+                print("Exited by user")'''
+        print('closing client socket')
         client_sock.close()
     server_socket.close()
