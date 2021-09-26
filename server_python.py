@@ -2,6 +2,7 @@ import socket
 from time import ctime
 from distance_meter_protocol import DistanceMeter
 
+
 #Get hostname and IP address of my computer
 
 def get_ip_host():
@@ -11,10 +12,10 @@ def get_ip_host():
 
 HOST = get_ip_host()
 PORT = 12345
-BUFSIZ = 1024
+BUFSIZ = 4096
 ADDR = (HOST, PORT)
 
-if __name__ == '__main__':    
+if __name__ == '__main__':   
     print('Server address: ',HOST)
     print('Server port: ',PORT)
     server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -22,30 +23,38 @@ if __name__ == '__main__':
     server_socket.listen(5)
     server_socket.setsockopt( socket.SOL_SOCKET,socket.SO_REUSEADDR, 1 )
     while True:
-        print('Server waiting for connection...')
-        client_sock, addr = server_socket.accept()
-        print('Client connected from: ', addr)
-        dMP = DistanceMeter(client_sock,addr,BUFSIZ)
-        while True:
-            user_input = input('DMP>').split(' ')
-            command = user_input[0]
-            params = user_input[1:]
-            print('command',command)
-            print('params',params)
-            if command == 'close':
-                break
-            command_fun = dMP.get_command(command)
-            command_return = command_fun(params)
-            print(command_return)
-            '''data = client_sock.recv(BUFSIZ)
-            if not data or data.decode('utf-8') == 'END':
-                break
-            print("Received from client: %s" % data.decode('utf-8'))
-            print("Sending the server time to client: %s"%ctime())
-            try:
-                client_sock.send(bytes(ctime(), 'utf-8'))
-            except KeyboardInterrupt:
-                print("Exited by user")'''
-        print('closing client socket')
-        client_sock.close()
-    server_socket.close()
+        try:
+            print('Server waiting for connection...')
+            client_sock, addr = server_socket.accept()
+            client_sock.settimeout(5)
+            print('Client connected from: ', addr)
+            dMP = DistanceMeter(client_sock,addr,BUFSIZ)
+            while True:
+                try:
+                    user_input = input('DMP>').split(' ')
+                    command = user_input[0]
+                    params = user_input[1:]
+                    #print('command',command)#DEBUG
+                    #print('params',params)#DEBUG
+                    if command == 'close':
+                        dMP.close()
+                        break
+                    command_fun = dMP.get_command(command)
+                    command_return = str(command_fun(params))
+                    print(command_return)
+                except KeyboardInterrupt:
+                    server_socket.close()
+                    raise KeyboardInterrupt()
+                '''data = client_sock.recv(BUFSIZ)
+                if not data or data.decode('utf-8') == 'END':
+                    break
+                print("Received from client: %s" % data.decode('utf-8'))
+                print("Sending the server time to client: %s"%ctime())
+                
+                    client_sock.send(bytes(ctime(), 'utf-8'))
+                except KeyboardInterrupt:
+                    print("Exited by user")'''
+        except KeyboardInterrupt:
+            print('closing client socket')
+            client_sock.close()
+            break
