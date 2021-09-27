@@ -1,7 +1,7 @@
 #include <WiFi.h>
 
-const int ECHO_PIN = 12;
-const int TRIGGER_PIN = 14;
+const int ECHO_PIN = 4;
+const int TRIGGER_PIN = 5;
  
 const int LED_RED_PIN = 13;
 const int LED_YELLOW_PIN = 0;
@@ -38,6 +38,8 @@ void sendClosingConnection(WiFiClient client)
   client.println("closing connection");
 }
 
+
+
 IPAddress connectLocalWiFi(const char* ssid,const char* password)
 {
   Serial.print("Connecting to: ");
@@ -48,6 +50,26 @@ IPAddress connectLocalWiFi(const char* ssid,const char* password)
     Serial.print('.');
   }
   return WiFi.localIP();
+}
+
+long readUltrasonicDistance(int triggerPin, int echoPin){
+  pinMode(triggerPin, OUTPUT);  // Clear the trigger
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigger pin to HIGH state for 10 microseconds
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+  pinMode(echoPin, INPUT);
+  // Reads the echo pin, and returns the sound wave travel time in microseconds
+  return pulseIn(echoPin, HIGH);
+}
+
+int sendDistance(WiFiClient client){
+  // measure the ping time in cm
+  int distance = 0.01723 * readUltrasonicDistance(TRIGGER_PIN,  ECHO_PIN);
+  client.println(distance);
+  return distance;
 }
 
 WiFiClient client;
@@ -76,6 +98,10 @@ void loop() {
     if (line == "get_leds_dict")
     {
       sendLedsDict(client);
+    }
+    else if (line == "get_distance")
+    {
+      sendDistance(client);
     }
     if (line == "close")
     {

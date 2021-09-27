@@ -43,15 +43,13 @@ class DistanceMeter:
             res_dict[key]=value
         return res_dict 
 
-        
-
     def get_distance(self,*params):
         client_sock = self.client_sock
         client_sock.send(bytes('get_distance', 'utf-8'))
-        data = client_sock.recv(self.buf_size)
+        data = self.recv_all()
         if not data:
-            data = 'client does not answer'
-        return data.decode('utf-8')[:-1]
+            data = self.dmp_error('client does not answer')
+        return data
 
     def get_leds_dict(self):
         client_sock = self.client_sock
