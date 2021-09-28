@@ -172,10 +172,10 @@ class DistanceMeter:
         if error <= max_error:
             self.turn_on_one_led(['green','on'])
             ans = self.dmp_ok(f'{round(distance_mesure,4)} cm.')
-        if delta_distance > 0:
+        elif delta_distance > 0:
             self.turn_on_one_led(['red','on'])
             ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. closer')
-        if delta_distance < 0: 
+        elif delta_distance < 0: 
             self.turn_on_one_led(['red','on'])
             ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. farther')
         return ans
