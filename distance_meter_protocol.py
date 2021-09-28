@@ -1,4 +1,4 @@
-from os import stat
+from os import extsep, stat
 import re
 from colorama import Fore, Back, Style
 import os
@@ -69,19 +69,25 @@ class DistanceMeter:
     
     def turn_led(self,*params):
         client_sock = self.client_sock
-        state = params[0]
+        print(params[0])
+        state = params[0][0]
+        if len(params[0])==2:
+            led_color = params[0][1]
+            leds_dict = self.get_leds_dict()
+            if led_color in leds_dict.keys():
+                led_id = leds_dict[led_color]
+            else:
+                data = self.dmp_error('that color does not exist')
         posible_states = ['on','off']
         message = 'turn_led_'
         if state in posible_states:
-            message = message + state
+            message = message + state + ' '+str(led_id)
             client_sock.send(bytes(message, 'utf-8'))
-            data = client_sock.recv(self.buf_size)
+            data = self.recv_all()
             if not data:
                 data = self.dmp_error('error: client does not answer')
-            else:
-                data = data.decode('utf-8')[:-1]
         else:
-            data = self.dmp_error('syntax error: turn_led [on|off] [led_color]')
+            data = self.dmp_error('syntax error: turn_led <on|off> [led_color]')
         return data
 
 

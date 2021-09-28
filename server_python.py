@@ -11,7 +11,7 @@ def get_ip_host():
     return ip_add_host
 
 HOST = get_ip_host()
-PORT = 12345
+PORT = 5050
 BUFSIZ = 4096
 ADDR = (HOST, PORT)
 

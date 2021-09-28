@@ -3,7 +3,7 @@
 const int ECHO_PIN = 4;
 const int TRIGGER_PIN = 5;
  
-const int LED_RED_PIN = 13;
+const int LED_RED_PIN = 21;
 const int LED_YELLOW_PIN = 0;
 const int LED_GREEN_PIN = 4;
  
@@ -16,7 +16,7 @@ const char* WIFI_SSID = "HUAWEI-2.4G-M6xZ";
 const char* WIFI_PASS = "HT7KU2Xv";
 
 const char* SERVER_ADDRESS = "192.168.100.76";
-const int SERVER_PORT = 12345;
+const int SERVER_PORT = 5050;
 
 void sendLedsDict(WiFiClient client)
 {
@@ -65,11 +65,32 @@ long readUltrasonicDistance(int triggerPin, int echoPin){
   return pulseIn(echoPin, HIGH);
 }
 
-int sendDistance(WiFiClient client){
+float sendDistance(WiFiClient client){
   // measure the ping time in cm
-  int distance = 0.01723 * readUltrasonicDistance(TRIGGER_PIN,  ECHO_PIN);
+  float distance = 0.01723 * readUltrasonicDistance(TRIGGER_PIN,  ECHO_PIN);
   client.println(distance);
   return distance;
+}
+
+void turnOnLed(int ledPin){
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, HIGH);
+}
+ 
+void turnOffLed(int ledPin){
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+}
+ 
+//This allows extense the number of LEDs
+void turnOnOneLed(int ledPin){
+  for (int i = 0; i < 3; i++){
+    if (ledPin == leds_pins[i]){
+      turnOnLed(ledPin);
+    } else{
+      turnOffLed(leds_pins[i]);
+    }
+  }
 }
 
 WiFiClient client;
@@ -94,7 +115,9 @@ void loop() {
   {
     String line = client.readStringUntil('\n');
     Serial.println(line);
+    Serial.println(line.substring(0,10));
     Serial.println(line.length());
+
     if (line == "get_leds_dict")
     {
       sendLedsDict(client);
@@ -102,6 +125,18 @@ void loop() {
     else if (line == "get_distance")
     {
       sendDistance(client);
+    }
+    else if (line.substring(0,11) == "turn_led_on")
+    {
+      int led_pin = line.substring(11).toInt();
+      turnOnLed(led_pin);
+      client.println("turn_led on "+line.substring(11)+": success");
+    }
+    else if (line.substring(0,12) == "turn_led_off")
+    {
+      int led_pin = line.substring(12).toInt();
+      turnOffLed(led_pin);
+      client.println("turn_led off "+line.substring(12)+": success");
     }
     if (line == "close")
     {
