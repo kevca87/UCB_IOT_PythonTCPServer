@@ -35,7 +35,7 @@ if __name__ == '__main__':
                     command = user_input[0]
                     params = user_input[1:]
                     #print('command',command)#DEBUG
-                    print('params',params)#DEBUG
+                    #print('params',params)#DEBUG
                     if command == 'close':
                         dMP.close()
                         break
@@ -45,15 +45,6 @@ if __name__ == '__main__':
                 except KeyboardInterrupt:
                     server_socket.close()
                     raise KeyboardInterrupt()
-                '''data = client_sock.recv(BUFSIZ)
-                if not data or data.decode('utf-8') == 'END':
-                    break
-                print("Received from client: %s" % data.decode('utf-8'))
-                print("Sending the server time to client: %s"%ctime())
-                
-                    client_sock.send(bytes(ctime(), 'utf-8'))
-                except KeyboardInterrupt:
-                    print("Exited by user")'''
         except KeyboardInterrupt:
             print('closing client socket')
             client_sock.close()

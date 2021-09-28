@@ -1,0 +1,42 @@
+mcu_message,bytes_mcu_message,ping_s,server_message,bytes_server_message
+"{red:21,yellow:22,green:23}",27,1.15137,get_leds_dict,13
+turn_led  21 on : success,25,1.122621,turn_led_on 21,14
+turn_led  23 on : success,25,1.201052,turn_led_on 23,14
+turn_led  22 on : success,25,1.116269,turn_led_on 22,14
+turn_led  21 off : success,26,1.160552,turn_led_off 21,15
+turn_led  23 off : success,26,1.198773,turn_led_off 23,15
+turn_led  22 off : success,26,1.219071,turn_led_off 22,15
+turn_led  21 on : success,25,1.058934,turn_led_on 21,14
+turn_led  22 off : success,26,1.103261,turn_led_off 22,15
+turn_led  23 off : success,26,1.127947,turn_led_off 23,15
+turn_led  21 off : success,26,1.139743,turn_led_off 21,15
+turn_led  22 off : success,26,1.118296,turn_led_off 22,15
+turn_led  23 on : success,25,1.134231,turn_led_on 23,14
+turn_led  21 off : success,26,1.124384,turn_led_off 21,15
+turn_led  22 on : success,25,1.059302,turn_led_on 22,14
+turn_led  23 off : success,26,1.1667,turn_led_off 23,15
+0.96,4,1.129309,get_distance,12
+0.93,4,2.450046,get_distance,12
+turn_led  21 on : success,25,1.06432,turn_led_on 21,14
+turn_led  22 off : success,26,1.051135,turn_led_off 22,15
+turn_led  23 off : success,26,1.262289,turn_led_off 23,15
+turn_led  21 on : success,25,1.241326,turn_led_on 21,14
+turn_led  23 on : success,25,1.213965,turn_led_on 23,14
+turn_led  22 on : success,25,1.129887,turn_led_on 22,14
+turn_led  21 off : success,26,1.12035,turn_led_off 21,15
+turn_led  23 off : success,26,1.23242,turn_led_off 23,15
+turn_led  22 off : success,26,1.221202,turn_led_off 22,15
+turn_led  21 on : success,25,1.066106,turn_led_on 21,14
+turn_led  22 off : success,26,1.090753,turn_led_off 22,15
+turn_led  23 off : success,26,1.11892,turn_led_off 23,15
+turn_led  21 off : success,26,1.413451,turn_led_off 21,15
+turn_led  22 off : success,26,1.354669,turn_led_off 22,15
+turn_led  23 on : success,25,1.153221,turn_led_on 23,14
+turn_led  21 off : success,26,1.135198,turn_led_off 21,15
+turn_led  22 on : success,25,1.059363,turn_led_on 22,14
+turn_led  23 off : success,26,3.967764,turn_led_off 23,15
+0.93,4,1.45462,get_distance,12
+0.93,4,1.438632,get_distance,12
+turn_led  21 on : success,25,1.319036,turn_led_on 21,14
+turn_led  22 off : success,26,1.372858,turn_led_off 22,15
+turn_led  23 off : success,26,1.323229,turn_led_off 23,15

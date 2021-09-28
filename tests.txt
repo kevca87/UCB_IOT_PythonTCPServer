@@ -1,0 +1,23 @@
+turn_led red on
+turn_led green on
+turn_led yellow on
+turn_led red off
+turn_led green off
+turn_led yellow off
+turn_on_one_led red
+turn_on_one_led green
+turn_on_one_led yellow
+get_distance
+dm 10
+turn_led red on -t
+turn_led green on -t
+turn_led yellow on -t
+turn_led red off -t
+turn_led green off -t
+turn_led yellow off -t
+turn_on_one_led red
+turn_on_one_led green
+turn_on_one_led yellow
+get_distance -t
+dm 10
+save

@@ -1,6 +1,7 @@
 from os import extsep, get_terminal_size, stat, terminal_size, times
 import datetime
 import re
+import pandas as pd
 from colorama import Fore, Back, Style
 import os
 os.system('color')
@@ -12,20 +13,24 @@ def percentage_relative_error(real_value,mesure_value):
     delta_val = delta(real_value,mesure_value)
     return [abs(delta_val)*100 / real_value,delta_val]
 
+def utf8len(s):
+    return len(s.encode('utf-8'))
+
 class DistanceMeter:
 
     def __init__(self,client_sock,client_addr,buf_size):
         self.client_sock = client_sock 
         self.client_addr = client_addr
         self.buf_size = buf_size
-        self.commands_dictionary = {'get_distance':self.get_distance,
+        self.commands_dictionary = {'get_distance':self.get_distance_str,
                                     'turn_led':self.turn_led,
                                     'get_leds_dict':self.get_leds_dict_str,
                                     'turn_on_one_led':self.turn_on_one_led,
-                                    'dm':self.distance_meter
+                                    'dm':self.distance_meter,
+                                    'save':self.historial_to_csv
                                     }
-        self.leds_dict = self.get_leds_dict([''])
         self.send_recv_historial = []
+        self.leds_dict = self.get_leds_dict([''])
     
     def dmp_ok(self,str_ok):
         return Fore.CYAN + str_ok + Fore.RESET
@@ -37,13 +42,16 @@ class DistanceMeter:
         client_sock = self.client_sock
         data_str = ''
         while True:
-            data = client_sock.recv(self.buf_size)
-            if not data:
-                data_str = self.dmp_error('client does not answer')
-                break
-            data_str = data_str + data.decode('utf-8')
-            if data_str[-1] == limit_str:#!=
-                break
+            try:
+                data = client_sock.recv(self.buf_size)
+                if not data:
+                    data_str = self.dmp_error('error: client does not answer')
+                    break
+                data_str = data_str + data.decode('utf-8')
+                if data_str[-1] == limit_str:#!=
+                    break
+            except:
+                data_str = self.dmp_error('error: timeout, client does not answer')
         return data_str.strip('\n\r')
 
     def recv_all(self):
@@ -58,10 +66,12 @@ class DistanceMeter:
         self.send_message(message)
         data = self.recv_all()
         time_of_recv = datetime.datetime.now()
+        diff_time = time_of_recv - time_of_send
+        bytes_message = utf8len(message)
+        bytes_data = utf8len(data)
+        self.send_recv_historial.append([data,bytes_data,diff_time.total_seconds(),message,bytes_message])
         if get_time:
-            diff_time = time_of_recv - time_of_send
             data = [data,diff_time]
-            self.send_recv_historial.append(data)
         return data
 
     def send_recv_str(self,message,get_time = False):
@@ -85,6 +95,10 @@ class DistanceMeter:
         get_time = self.time_modifier(params)
         data = self.send_recv_str(message,get_time)
         return data
+
+    def get_distance_str(self,params):
+        data = self.get_distance(params)
+        return self.dmp_ok(data+' cm.')
 
     def to_dict(self,str_dict):
         dicts = re.findall(r'{(.+)}',str_dict)
@@ -174,10 +188,10 @@ class DistanceMeter:
             ans = self.dmp_ok(f'{round(distance_mesure,4)} cm.')
         elif delta_distance > 0:
             self.turn_on_one_led(['red','on'])
-            ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. closer')
+            ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. farther')
         elif delta_distance < 0: 
             self.turn_on_one_led(['red','on'])
-            ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. farther')
+            ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. closer')
         return ans
 
 
@@ -197,3 +211,9 @@ class DistanceMeter:
         else:
             data = data.decode('utf-8')[:-1]
         return data
+
+    def historial_to_csv(self,params):
+        df_messages = pd.DataFrame(self.send_recv_historial,columns=['mcu_message','bytes_mcu_message','ping_s','server_message','bytes_server_message'])
+        filename = 'results.csv'
+        df_messages.to_csv(filename,index=False)
+        return self.dmp_ok(f'historial is now on {filename}')
