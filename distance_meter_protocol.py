@@ -81,7 +81,6 @@ class DistanceMeter:
         return get_time
 
     def get_distance(self,params):
-        
         message = 'get_distance'
         get_time = self.time_modifier(params)
         data = self.send_recv_str(message,get_time)
@@ -163,23 +162,22 @@ class DistanceMeter:
         return ans
 
     def distance_meter(self,params):
-        distance_expected = params[0]
+        distance_expected = float(params[0])
         try:
             max_error = float(params[1])
         except:
             max_error = 5
-        while True:
-            error, delta_distance = percentage_relative_error(distance_expected,self.get_distance([''])) 
-            if error <= max_error:
-                self.turn_on_one_led(['green','on'])
-                ans = self.dmp_ok(f'{abs(delta_distance)} cm.')
-                break
-            if delta_distance > 0:
-                self.turn_on_one_led(['red','on'])
-                ans = self.dmp_error(f'{abs(delta_distance)} cm. closer')
-            if delta_distance < 0: 
-                self.turn_on_one_led(['red','on'])
-                ans = self.dmp_error(f'{abs(delta_distance)} cm. farther')
+        distance_mesure = float(self.get_distance(['']))
+        error, delta_distance = percentage_relative_error(distance_expected,distance_mesure) 
+        if error <= max_error:
+            self.turn_on_one_led(['green','on'])
+            ans = self.dmp_ok(f'{round(distance_mesure,4)} cm.')
+        if delta_distance > 0:
+            self.turn_on_one_led(['red','on'])
+            ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. closer')
+        if delta_distance < 0: 
+            self.turn_on_one_led(['red','on'])
+            ans = self.dmp_error(f'{round(abs(delta_distance),4)} cm. farther')
         return ans
 
 

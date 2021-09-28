@@ -1,7 +1,7 @@
 #include <WiFi.h>
 
-const int ECHO_PIN = 4;
-const int TRIGGER_PIN = 5;
+const int ECHO_PIN = 5;
+const int TRIGGER_PIN = 18;
  
 const int LED_RED_PIN = 21;
 const int LED_YELLOW_PIN = 22;
