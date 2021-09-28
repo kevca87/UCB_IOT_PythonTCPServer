@@ -4,8 +4,8 @@ const int ECHO_PIN = 4;
 const int TRIGGER_PIN = 5;
  
 const int LED_RED_PIN = 21;
-const int LED_YELLOW_PIN = 0;
-const int LED_GREEN_PIN = 4;
+const int LED_YELLOW_PIN = 22;
+const int LED_GREEN_PIN = 23;
  
 //This allows extense the number of LEDs
 
@@ -130,13 +130,13 @@ void loop() {
     {
       int led_pin = line.substring(11).toInt();
       turnOnLed(led_pin);
-      client.println("turn_led on "+line.substring(11)+": success");
+      client.println("turn_led "+line.substring(11)+" on : success");
     }
     else if (line.substring(0,12) == "turn_led_off")
     {
       int led_pin = line.substring(12).toInt();
       turnOffLed(led_pin);
-      client.println("turn_led off "+line.substring(12)+": success");
+      client.println("turn_led "+line.substring(12)+" off : success");
     }
     if (line == "close")
     {

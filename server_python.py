@@ -35,7 +35,7 @@ if __name__ == '__main__':
                     command = user_input[0]
                     params = user_input[1:]
                     #print('command',command)#DEBUG
-                    #print('params',params)#DEBUG
+                    print('params',params)#DEBUG
                     if command == 'close':
                         dMP.close()
                         break
