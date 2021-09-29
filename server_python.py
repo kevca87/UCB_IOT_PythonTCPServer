@@ -1,6 +1,6 @@
 import socket
 from time import ctime
-from distance_meter_protocol import DistanceMeter
+from distance_meter_protocol import DistanceMeter, DistanceMeterProtocol
 
 
 #Get hostname and IP address of my computer
@@ -28,7 +28,7 @@ if __name__ == '__main__':
             client_sock, addr = server_socket.accept()
             client_sock.settimeout(5)
             print('Client connected from: ', addr)
-            dMP = DistanceMeter(client_sock,addr,BUFSIZ)
+            dMP = DistanceMeterProtocol(client_sock,addr,BUFSIZ)
             while True:
                 try:
                     user_input = input('DMP>').split(' ')
@@ -45,6 +45,7 @@ if __name__ == '__main__':
                 except KeyboardInterrupt:
                     server_socket.close()
                     raise KeyboardInterrupt()
+            
         except KeyboardInterrupt:
             print('closing client socket')
             client_sock.close()

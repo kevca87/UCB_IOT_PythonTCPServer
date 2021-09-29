@@ -16,7 +16,7 @@ def percentage_relative_error(real_value,mesure_value):
 def utf8len(s):
     return len(s.encode('utf-8'))
 
-class DistanceMeter:
+class DistanceMeterProtocol:
 
     def __init__(self,client_sock,client_addr,buf_size):
         self.client_sock = client_sock 
