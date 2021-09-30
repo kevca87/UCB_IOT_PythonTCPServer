@@ -1,6 +1,6 @@
 import socket
 from time import ctime
-from distance_meter_protocol import DistanceMeter, DistanceMeterProtocol
+from distance_meter_protocol import  DistanceMeterProtocol
 
 
 #Get hostname and IP address of my computer
