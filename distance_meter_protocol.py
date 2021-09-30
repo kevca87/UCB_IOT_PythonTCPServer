@@ -119,6 +119,7 @@ class DistanceMeterProtocol:
         data = self.send_recv_str(message,get_time)
         time_data = data.split('}')[1]
         leds_dict = self.to_dict(data)
+        self.leds_dict = leds_dict
         if get_time:
             ans = [leds_dict,time_data]
         if not get_time:

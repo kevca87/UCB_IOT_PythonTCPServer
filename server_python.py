@@ -10,7 +10,7 @@ def get_ip_host():
     ip_add_host = socket.gethostbyname(hostname)
     return ip_add_host
 
-HOST = get_ip_host()
+HOST = get_ip_host() 
 PORT = 5050
 BUFSIZ = 4096
 ADDR = (HOST, PORT)
